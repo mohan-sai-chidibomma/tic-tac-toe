@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRef, useEffect } from "react";
 
 export default function Player({
   initialName,
@@ -8,6 +9,7 @@ export default function Player({
 }) {
   const [playerName, setPlayerName] = useState(initialName);
   const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef(null);
 
   function handleEditClick() {
     if (isEditing) {
@@ -15,6 +17,13 @@ export default function Player({
     }
     setIsEditing((editing) => !editing);
   }
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
 
   function handleChange(event) {
     setPlayerName(event.target.value);
@@ -30,6 +39,7 @@ export default function Player({
         value={playerName}
         onChange={handleChange}
         onBlur={handleEditClick}
+        ref={inputRef}
       />
     );
   }
